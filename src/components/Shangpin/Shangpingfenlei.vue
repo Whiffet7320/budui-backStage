@@ -2,6 +2,12 @@
   <div class="index">
     <div class="nav1">
       <div class="tit1">商品分类</div>
+       <div class="tit2">
+        <el-tabs v-model="activeName" @tab-click="tabsHandleClick">
+          <el-tab-pane label="商品分类" name="1"></el-tab-pane>
+          <el-tab-pane label="家政分类" name="2"></el-tab-pane>
+        </el-tabs>
+      </div>
     </div>
     <div class="nav2">
       <!-- <div class="myForm">
@@ -54,10 +60,10 @@
           <vxe-table-column field="id" title="ID"></vxe-table-column>
           <vxe-table-column
             tree-node
-            field="cate_name"
+            field="category_name"
             title="分类名称"
           ></vxe-table-column>
-          <vxe-table-column field="pic" title="分类图标">
+          <!-- <vxe-table-column field="pic" title="分类图标">
             <template slot-scope="scope">
               <el-image
                 :src="scope.row.pic"
@@ -69,8 +75,9 @@
                 </div>
               </el-image>
             </template>
-          </vxe-table-column>
-          <vxe-table-column field="sort" title="排序"></vxe-table-column>
+          </vxe-table-column> -->
+          <!-- <vxe-table-column field="sort" title="排序"></vxe-table-column> -->
+          <vxe-table-column field="add_time" title="添加时间"></vxe-table-column>
           <!-- <vxe-table-column field="is_show" title="状态(是否显示)">
             <template slot-scope="scope">
               <el-switch
@@ -131,16 +138,16 @@
           </el-row> -->
           <el-row>
             <el-col :span="20">
-              <el-form-item label="分类名称" prop="cate_name">
+              <el-form-item label="分类名称：" prop="category_name">
                 <el-input
                   size="small"
                   placeholder="请输入分类名称"
-                  v-model="addForm.cate_name"
+                  v-model="addForm.category_name"
                 ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
+          <!-- <el-row>
             <el-col :span="20">
               <el-form-item label="分类图标(180*180)">
                 <div @click="companyList('tb')" class="myImg">
@@ -159,8 +166,8 @@
                 </div>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
+          </el-row> -->
+          <!-- <el-row>
             <el-col :span="20">
               <el-form-item label="分类大图(468*340)">
                 <div @click="companyList('dt')" class="myImg">
@@ -179,14 +186,24 @@
                 </div>
               </el-form-item>
             </el-col>
-          </el-row>
+          </el-row> -->
           <el-row>
-            <el-col :span="10">
-              <el-form-item label="排序">
-                <el-input size="small" v-model="addForm.sort"></el-input>
+            <el-col :span="12">
+              <el-form-item label="分类类型：" prop="type">
+                <el-radio-group v-model="addForm.type">
+                  <el-radio label="1">商品</el-radio>
+                  <el-radio label="2">家政</el-radio>
+                </el-radio-group>
               </el-form-item>
             </el-col>
           </el-row>
+          <!-- <el-row>
+            <el-col :span="10">
+              <el-form-item label="排序：">
+                <el-input size="small" v-model="addForm.sort"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row> -->
           <!-- <el-row>
             <el-col :span="12">
               <el-form-item label="状态" prop="is_show">
@@ -225,9 +242,21 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
+  computed: {
+    ...mapState(["fenleiIndex"])
+  },
+  watch: {
+    fenleiIndex: function() {
+      this.activeName = this.fenleiIndex;
+      console.log(this.activeName);
+      this.getData();
+    }
+  },
   data() {
     return {
+      activeName:'1',
       searchForm: {
         pid: "",
         status: "",
@@ -236,18 +265,15 @@ export default {
       tableData: [],
       addDialogVisible: false,
       addForm: {
-        pid: "",
-        cate_name: "",
-        pic: "",
-        big_pic: "",
-        sort: "",
-        is_show: "显示",
+        category_name: "",
+        type: "",
       },
       rules: {
-        cate_name: [
+        category_name: [
           { required: true, message: "请输入分类名称", trigger: "blur" },
         ],
         is_show: [{ required: true, message: "请选择状态", trigger: "change" }],
+        type: [{ required: true, message: "请选择分类", trigger: "change" }],
       },
       imgStatus: "",
       imgFile: "",
@@ -259,36 +285,41 @@ export default {
   },
   methods: {
     async getData() {
-      const res = await this.$api.categoryIndex({
-        pid: 0,
+      const res = await this.$api.category_list({
+        type:this.activeName,
       });
       console.log(res);
       this.tableData = res.data;
       this.tableData.forEach((ele) => {
-        ele.is_showKG = ele.is_show == "1" ? true : false;
-        if (ele.children) {
-          ele.children.forEach((item) => {
-            item.is_showKG = item.is_show == "1" ? true : false;
-          });
-        }
+        ele.type = ele.type.toString()
+        // ele.is_showKG = ele.is_show == "1" ? true : false;
+        // if (ele.children) {
+        //   ele.children.forEach((item) => {
+        //     item.is_showKG = item.is_show == "1" ? true : false;
+        //   });
+        // }
       });
+    },
+    tabsHandleClick(tab) {
+      console.log(tab.index);
+      this.$store.commit("fenleiIndex", (Number(tab.index) + 1).toString());
     },
     // 开关（显示/隐藏）
-    async changeKG(row) {
-      console.log(row);
-      const res = await this.$api.categorySave({
-        ...row,
-        is_show: row.is_showKG == true ? "1" : "0",
-      });
-      if (res.code == 200) {
-        this.$message({
-          message: res.msg,
-          type: "success",
-        });
-        this.addDialogVisible = false;
-        this.getData();
-      }
-    },
+    // async changeKG(row) {
+    //   console.log(row);
+    //   const res = await this.$api.categorySave({
+    //     ...row,
+    //     is_show: row.is_showKG == true ? "1" : "0",
+    //   });
+    //   if (res.code == 200) {
+    //     this.$message({
+    //       message: res.msg,
+    //       type: "success",
+    //     });
+    //     this.addDialogVisible = false;
+    //     this.getData();
+    //   }
+    // },
     searchOnSubmit() {
       console.log(this.searchForm);
     },
@@ -300,18 +331,19 @@ export default {
     },
     addHandleClose() {
       this.addDialogVisible = false;
+      this.id = '';
     },
     tabEdit(row) {
       console.log(row);
       this.id = row.id;
       this.addDialogVisible = true;
-      row.is_show = row.is_show == "0" ? "隐藏" : "显示";
-      row.pid = row.pid == "0" ? "顶级菜单" : row.pid;
       this.addForm = { ...row };
     },
     async tabDel(row) {
       console.log(row);
-      const res = await this.$api.categoryDel(row.id);
+      const res = await this.$api.del_category({
+        category_id:row.id
+      });
       if (res.code == 200) {
         this.$message({
           message: res.msg,
@@ -325,12 +357,12 @@ export default {
       }
     },
     AddOnSubmit(formName) {
-      this.addForm.is_show = this.addForm.is_show == "显示" ? 1 : 0;
       console.log(this.addForm);
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          const res = await this.$api.categorySave({
+          const res = await this.$api.save_category({
             ...this.addForm,
+            category_id:this.id
           });
           if (res.code == 200) {
             this.$message({

@@ -1,9 +1,32 @@
 export default {
-    // baseUrl: '',
-    baseUrl: 'http://192.168.50.142:9083',
+    // baseUrl: 'http://pin.5laoye.com',
+    baseUrl: 'http://192.168.50.142:9001',
     // baseUrl: 'http://192.168.1.128:8094',
     // baseUrl:'http://pinapi.hxqhhhh.shop',
     login: '/admin/login', //登录
+    category_list:'/admin/category_list',//分类列表
+    save_category:'/admin/save_category',//新增和编辑分类
+    del_category:'/admin/del_category',//删除分类
+    product_list:'/admin/product_list',//商品列表
+    upload_product_pic:'/admin/upload_product_pic',//上传商品图片
+    save_product:'/admin/save_product',//新增或编辑商品
+    del_product:'/admin/del_product',//删除商品
+    update_product_status:'/admin/update_product_status',//商品状态修改
+    homework_list:'/admin/homework_list',//家政列表
+    save_homework:'/admin/save_homework',//新增或编辑家政服务
+    upload_homework_pic:'/admin/upload_homework_pic',//上传家政服务图片
+    del_homework:'/admin/del_homework',//删除家政服务
+    update_homework_status:'/admin/update_homework_status',//修改家政服务状态
+    vote_list:'/admin/vote_list',//投票列表
+    add_vote:'/admin/add_vote',//新增投票
+    del_vote:'/admin/del_vote',//删除投票
+    add_vote_product:'/admin/add_vote_product',//商品添加到投票
+    vote_product_list:'/admin/vote_product_list',//投票内的商品列表
+    del_vote_product:'/admin/del_vote_product',//删除投票内商品
+    product_order_list:'/admin/product_order_list',//用户点餐订单列表
+    update_order_status:'/admin/update_order_status',//订单确认
+    homework_order_list:'/admin/homework_order_list',//用户家政订单列表
+    // 
     productList:'/admin/product/list',//商品列表
     loginInfo:'/admin/login/info',
     productUpload:'/admin/product/upload',//上传商品图片
@@ -13,6 +36,7 @@ export default {
     categoryDel:'/admin/category/del',//商品分类删除
     productAttrs:'/admin/product/attrs',//获取商品规格属性
     productDescription:'/admin/product/description',//获取商品详情
+    combinationDel:'/admin/combination/del',//删除拼团商品
     combinationSave:'/admin/combination/save',//添加拼团商品
     combinationList:'/admin/combination/list',//拼团商品列表
     combinationAttrs:'/admin/combination/attrs',//获取拼团商品规格

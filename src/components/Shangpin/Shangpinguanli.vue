@@ -2,47 +2,29 @@
   <div class="index">
     <div class="nav1">
       <div class="tit1">商品管理</div>
-      <div class="tit2">
+      <!-- <div class="tit2">
         <el-tabs v-model="activeName" @tab-click="tabsHandleClick">
-          <el-tab-pane label="出售中的商品" name="1"></el-tab-pane>
-          <el-tab-pane label="下架的商品" name="2"></el-tab-pane>
-          <el-tab-pane label="已经售馨商品" name="3"></el-tab-pane>
+          <el-tab-pane label="商品" name="1"></el-tab-pane>
+          <el-tab-pane label="家政" name="2"></el-tab-pane>
         </el-tabs>
-      </div>
+      </div>-->
     </div>
     <div class="nav2">
-      <div class="myForm">
+      <!-- <div class="myForm">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label="商品分类：">
-            <el-cascader
-              size="small"
-              :options="options"
-              :props="{ checkStrictly: true }"
-              clearable
-            ></el-cascader>
+            <el-cascader size="small" :options="options" :props="{ checkStrictly: true }" clearable></el-cascader>
           </el-form-item>
           <el-form-item label="商品搜索：">
-            <el-input
-              size="small"
-              v-model="formInline.user"
-              placeholder="商品搜索"
-            ></el-input>
+            <el-input size="small" v-model="formInline.user" placeholder="商品搜索"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button size="small" type="primary" @click="onSubmit"
-              >查询</el-button
-            >
+            <el-button size="small" type="primary" @click="onSubmit">查询</el-button>
           </el-form-item>
         </el-form>
-      </div>
+      </div> -->
       <div class="tit1">
-        <el-button
-          @click="toAddShop"
-          size="small"
-          type="primary"
-          icon="el-icon-plus"
-          >添加商品</el-button
-        >
+        <el-button @click="toAddShop" size="small" type="primary" icon="el-icon-plus">添加商品</el-button>
       </div>
       <div class="myTable">
         <vxe-table :data="tableData">
@@ -78,7 +60,7 @@
           <vxe-table-column field="role" title="商品图">
             <template slot-scope="scope">
               <el-image
-                :src="scope.row.image"
+                :src="scope.row.product_avatar"
                 fit="fill"
                 style="width: 40px; height: 40px"
               >
@@ -88,44 +70,27 @@
               </el-image>
             </template>
           </vxe-table-column>
-          <vxe-table-column
-            field="product_name"
-            title="商品名称"
-          ></vxe-table-column>
-          <vxe-table-column field="price" title="商品售价"></vxe-table-column>
-          <vxe-table-column field="ficti" title="销量"></vxe-table-column>
+          <vxe-table-column field="product_name" title="商品名称"></vxe-table-column>
+          <vxe-table-column field="product_price" title="商品售价"></vxe-table-column>
+          <vxe-table-column field="product_sell_num" title="销量"></vxe-table-column>
           <vxe-table-column field="stock" title="库存"></vxe-table-column>
-          <vxe-table-column field="sort" title="排序"></vxe-table-column>
-          <vxe-table-column field="is_show" title="状态(是否上架)">
+          <!-- <vxe-table-column field="sort" title="排序"></vxe-table-column> -->
+          <vxe-table-column field="myStatus" title="状态(是否上架)">
             <template slot-scope="scope">
-              <el-switch
-                @change="changeKG(scope.row)"
-                v-model="scope.row.is_showKG"
-              >
-              </el-switch>
+              <el-switch @change="changeKG(scope.row)" v-model="scope.row.myStatus"></el-switch>
             </template>
           </vxe-table-column>
           <vxe-table-column title="操作状态" width="180">
             <template slot-scope="scope">
               <div class="flex">
-                <el-button
-                  size="small"
-                  @click="toEditShop(scope.row)"
-                  type="text"
-                  >编辑</el-button
-                >
-                <el-button
+                <el-button size="small" @click="toEditShop(scope.row)" type="text">编辑</el-button>
+                <!-- <el-button
                   size="small"
                   @click="toEditShop(scope.row)"
                   type="text"
                   >查看评论</el-button
-                >
-                <el-button
-                  size="small"
-                  @click="toEditShop(scope.row)"
-                  type="text"
-                  >删除</el-button
-                >
+                >-->
+                <el-button size="small" @click="toDelShop(scope.row)" type="text">删除</el-button>
               </div>
             </template>
           </vxe-table-column>
@@ -139,8 +104,7 @@
           :page-sizes="[10, 15, 20, 30]"
           layout="total,sizes, prev, pager, next, jumper"
           :total="this.total"
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </div>
   </div>
@@ -150,28 +114,37 @@
 import { mapState } from "vuex";
 export default {
   computed: {
-    ...mapState(["shangpingliebiaoPage", "shangpingliebiaoPageSize"]),
+    ...mapState([
+      "shangpingliebiaoPage",
+      "shangpingliebiaoPageSize",
+      "shopIndex"
+    ])
   },
   watch: {
-    shangpingliebiaoPage: function (page) {
+    shangpingliebiaoPage: function(page) {
       this.$store.commit("shangpingliebiaoPage", page);
       this.getData();
     },
-    shangpingliebiaoPageSize: function (pageSize) {
+    shangpingliebiaoPageSize: function(pageSize) {
       this.$store.commit("shangpingliebiaoPageSize", pageSize);
       this.getData();
     },
+    shopIndex: function() {
+      this.activeName = this.shopIndex;
+      console.log(this.activeName);
+      this.getData();
+    }
   },
   data() {
     return {
-      activeName: "3",
+      activeName: "1",
       formInline: {
         user: "",
-        region: "",
+        region: ""
       },
       options: [],
       tableData: [],
-      total: 0,
+      total: 0
     };
   },
   created() {
@@ -179,42 +152,43 @@ export default {
   },
   methods: {
     async getData() {
-      const res = await this.$api.productList({
+      const res = await this.$api.product_list({
         limit: this.shangpingliebiaoPageSize,
-        page: this.shangpingliebiaoPage,
+        page: this.shangpingliebiaoPage
       });
       console.log(res.data.data);
       this.total = res.data.total;
       this.tableData = res.data.data;
-      this.tableData.forEach((ele) => {
-        ele.is_showKG = ele.is_show == "1" ? true : false;
+      this.tableData.forEach(ele => {
+        // ele.is_showKG = ele.is_show == "1" ? true : false;
+        ele.myStatus = ele.status == "0" ? true : false;
       });
-      const res2 = await this.$api.categoryIndex({
-        pid: 0,
-      });
-      res2.data.forEach((ele) => {
-        ele.value = ele.id;
-        ele.label = ele.cate_name;
-        if (ele.children) {
-          ele.children.forEach((item) => {
-            item.value = item.id;
-            item.label = item.cate_name;
-          });
-        }
-      });
-      this.options = res2.data;
+      // const res2 = await this.$api.categoryIndex({
+      //   pid: 0,
+      // });
+      // res2.data.forEach((ele) => {
+      //   ele.value = ele.id;
+      //   ele.label = ele.cate_name;
+      //   if (ele.children) {
+      //     ele.children.forEach((item) => {
+      //       item.value = item.id;
+      //       item.label = item.cate_name;
+      //     });
+      //   }
+      // });
+      // this.options = res2.data;
     },
     // 开关（上架/下架）
     async changeKG(row) {
       console.log(row);
-      const res = await this.$api.productShow({
-        id: row.id,
-        show: row.is_showKG == true ? "1" : "0",
+      const res = await this.$api.update_product_status({
+        product_id: row.id,
+        status: row.myStatus == false ? "1" : "0"
       });
       if (res.code == 200) {
         this.$message({
           message: res.msg,
-          type: "success",
+          type: "success"
         });
         this.getData();
       }
@@ -224,8 +198,22 @@ export default {
       this.$store.commit("shopObj", row);
       this.$router.push({ name: "Tianjiashangping" });
     },
-    tabsHandleClick(tab, event) {
-      console.log(tab, event);
+    async toDelShop(row) {
+      console.log(row);
+      const res = await this.$api.del_product({
+        product_id: row.id
+      });
+      if (res.code == 200) {
+        this.$message({
+          message: res.msg,
+          type: "success"
+        });
+        this.getData();
+      }
+    },
+    tabsHandleClick(tab) {
+      console.log(tab.index);
+      this.$store.commit("shopIndex", (Number(tab.index) + 1).toString());
     },
     onSubmit() {
       console.log("submit!");
@@ -242,8 +230,8 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.$store.commit("shangpingliebiaoPage", val);
-    },
-  },
+    }
+  }
 };
 </script>
 

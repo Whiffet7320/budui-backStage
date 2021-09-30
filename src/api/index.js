@@ -7,24 +7,24 @@ axios.defaults.headers['Content-Type'] = "application/json;charset=UTF-8";
 let myPost = axios.create({
     baseURL: urls.baseUrl,
     method: 'post',
-    timeout: 1000,
+    timeout: 5000,
 })
 let myGet = axios.create({
     baseURL: urls.baseUrl,
     method: 'get',
-    timeout: 1000,
+    timeout: 5000,
 })
 let myDelete = axios.create({
     baseURL: urls.baseUrl,
     method: 'delete',
-    timeout: 1000,
+    timeout: 5000,
 })
 
 myDelete.interceptors.request.use(config => {
     if (sessionStorage.getItem("token")) {
         config.headers = {
-            // 'X-Token': sessionStorage.getItem("token"),
-            'Authorization': `Bearer ${sessionStorage.getItem("token")}`,
+            'token': sessionStorage.getItem("token"),
+            // 'Authorization': `Bearer ${sessionStorage.getItem("token")}`,
             // 'Access-Control-Allow-Origin': '*',
             // "access-control-allow-credentials": "true"
         }
@@ -37,8 +37,8 @@ myDelete.interceptors.request.use(config => {
 myPost.interceptors.request.use(config => {
     if (sessionStorage.getItem("token")) {
         config.headers = {
-            // 'X-Token': sessionStorage.getItem("token"),
-            'Authorization': `Bearer ${sessionStorage.getItem("token")}`,
+            'token': sessionStorage.getItem("token"),
+            // 'Authorization': `Bearer ${sessionStorage.getItem("token")}`,
         }
     }
     return config;
@@ -50,7 +50,8 @@ myPost.interceptors.request.use(config => {
 myGet.interceptors.request.use(config => {
     if (sessionStorage.getItem("token")) {
         config.headers = {
-            'Authorization': `Bearer ${sessionStorage.getItem("token")}`,
+            'token': sessionStorage.getItem("token"),
+            // 'Authorization': `Bearer ${sessionStorage.getItem("token")}`,
         }
     }
     return config;
@@ -163,6 +164,202 @@ export default {
             }
         })
     },
+    category_list(obj) {
+        return myGet({
+            url: urls.category_list,
+            params: {
+                ...obj
+            }
+        })
+    },
+    save_category(obj) {
+        return myPost({
+            url: urls.save_category,
+            data: {
+                ...obj
+            }
+        })
+    },
+    del_category(obj) {
+        return myPost({
+            url: urls.del_category,
+            data: {
+                ...obj
+            }
+        })
+    },
+    product_list(obj) {
+        return myGet({
+            url: urls.product_list,
+            params: {
+                ...obj
+            }
+        })
+    },
+    async upload_product_pic(image) {
+        var configs = {
+            headers: {
+                "Content-Type": "multipart/form-data;charse=UTF-8",
+                'token': sessionStorage.getItem("token"),
+            },
+        };
+        const res = await axios
+            .post(`${urls.baseUrl}/admin/upload_product_pic`, image, configs)
+        return res.data
+    },
+    save_product(obj) {
+        return myPost({
+            url: urls.save_product,
+            data: {
+                ...obj
+            }
+        })
+    },
+    del_product(obj) {
+        return myPost({
+            url: urls.del_product,
+            data: {
+                ...obj
+            }
+        })
+    },
+    update_product_status(obj) {
+        return myPost({
+            url: urls.update_product_status,
+            data: {
+                ...obj
+            }
+        })
+    },
+    homework_list(obj) {
+        return myGet({
+            url: urls.homework_list,
+            params: {
+                ...obj
+            }
+        })
+    },
+    save_homework(obj) {
+        return myPost({
+            url: urls.save_homework,
+            data: {
+                ...obj
+            }
+        })
+    },
+    async upload_homework_pic(image) {
+        var configs = {
+            headers: {
+                "Content-Type": "multipart/form-data;charse=UTF-8",
+                'token': sessionStorage.getItem("token"),
+            },
+        };
+        const res = await axios
+            .post(`${urls.baseUrl}/admin/upload_homework_pic`, image, configs)
+        return res.data
+    },
+    del_homework(obj) {
+        return myPost({
+            url: urls.del_homework,
+            data: {
+                ...obj
+            }
+        })
+    },
+    update_homework_status(obj) {
+        return myPost({
+            url: urls.update_homework_status,
+            data: {
+                ...obj
+            }
+        })
+    },
+    vote_list(obj) {
+        return myGet({
+            url: urls.vote_list,
+            params: {
+                ...obj
+            }
+        })
+    },
+    add_vote(obj) {
+        return myPost({
+            url: urls.add_vote,
+            data: {
+                ...obj
+            }
+        })
+    },
+    del_vote(obj) {
+        return myPost({
+            url: urls.del_vote,
+            data: {
+                ...obj
+            }
+        })
+    },
+    add_vote_product(obj) {
+        return myPost({
+            url: urls.add_vote_product,
+            data: {
+                ...obj
+            }
+        })
+    },
+    vote_product_list(obj) {
+        return myGet({
+            url: urls.vote_product_list,
+            params: {
+                ...obj
+            }
+        })
+    },
+    del_vote_product(obj) {
+        return myPost({
+            url: urls.del_vote_product,
+            data: {
+                ...obj
+            }
+        })
+    },
+    product_order_list(obj) {
+        return myGet({
+            url: urls.product_order_list,
+            params: {
+                ...obj
+            }
+        })
+    },
+    update_order_status(obj) {
+        return myPost({
+            url: urls.update_order_status,
+            data: {
+                ...obj
+            }
+        })
+    },
+    homework_order_list(obj) {
+        return myGet({
+            url: urls.homework_order_list,
+            params: {
+                ...obj
+            }
+        })
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // 
     productList(obj) {
         return myGet({
             url: urls.productList,
@@ -678,6 +875,14 @@ export default {
         return myGet({
             url: urls.user_pintuan_count,
             params: {
+                ...obj
+            }
+        })
+    },
+    combinationDel(obj) {
+        return myPost({
+            url: urls.combinationDel,
+            data: {
                 ...obj
             }
         })

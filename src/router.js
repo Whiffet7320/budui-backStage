@@ -5,20 +5,26 @@ Vue.use(VueRouter)
 Vue.config.productionTip = false;
 
 
-const routes = [{
-    path: '/',
-    name: 'Home',
-    component: () => import('./components/Home'),
-    children: [{
-        path: 'Shouye',
-        name: 'Shouye',
-        component: () => import('./components/Home/Shouye'),
-    }, ]
-}, {
+const routes = [
+//     {
+//     path: '/',
+//     name: 'Home',
+//     component: () => import('./components/Home/Shouye'),
+//     children: [{
+//         path: 'Shouye',
+//         name: 'Shouye',
+//         component: () => import('./components/Home/Shouye'),
+//     }, ]
+// }, 
+{
     path: '/Shangpin',
     name: 'Shangpin',
     component: () => import('./components/Shangpin'),
     children: [{
+        path: 'Jiazhengguanli',
+        name: 'Jiazhengguanli',
+        component: () => import('./components/Shangpin/Jiazhengguanli'),
+    },{
         path: 'Shangpinguanli',
         name: 'Shangpinguanli',
         component: () => import('./components/Shangpin/Shangpinguanli'),
@@ -47,6 +53,10 @@ const routes = [{
         path: 'Dingdanguanli',
         name: 'Dingdanguanli',
         component: () => import('./components/Dingdan/Dingdanguanli'),
+    },{
+        path: 'JiazhengDingdanguanli',
+        name: 'JiazhengDingdanguanli',
+        component: () => import('./components/Dingdan/JiazhengDingdanguanli'),
     }, ]
 }, {
     path: '/Wenzhang',
@@ -65,6 +75,10 @@ const routes = [{
         path: 'Pingtuanshangping',
         name: 'Pingtuanshangping',
         component: () => import('./components/Yingxiao/Pingtuanshangping'),
+    },{
+        path: 'Toupiaoliebiao',
+        name: 'Toupiaoliebiao',
+        component: () => import('./components/Yingxiao/Toupiaoliebiao'),
     }, {
         path: 'Tianjiapingtuanshangping',
         name: 'Tianjiapingtuanshangping',

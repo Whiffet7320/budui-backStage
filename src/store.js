@@ -5,6 +5,13 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    fenleiIndex:'1',
+    shopIndex:'1',
+    jiazhengliebiaoPage: 1, //家政列表
+    jiazhengliebiaoPageSize: 10,
+    toupiaoliebiaoPage: 1, //投票列表
+    toupiaoliebiaoPageSize: 10,
+    // 
     userInfo: null,
     headerTit: '',
     yunfeimubanliebiaoPage: 1, //运费模板
@@ -47,6 +54,24 @@ export default new Vuex.Store({
     pingtuanjiluPageSize: 10,
   },
   mutations: {
+    toupiaoliebiaoPage(state, str) {
+      state.toupiaoliebiaoPage = str;
+    },
+    toupiaoliebiaoPageSize(state, str) {
+      state.toupiaoliebiaoPageSize = str;
+    },
+    jiazhengliebiaoPage(state, str) {
+      state.jiazhengliebiaoPage = str;
+    },
+    jiazhengliebiaoPageSize(state, str) {
+      state.jiazhengliebiaoPageSize = str;
+    },
+    fenleiIndex(state, str) {
+      state.fenleiIndex = str;
+    },
+    shopIndex(state, str) {
+      state.shopIndex = str;
+    },
     userInfo(state, str) {
       state.userInfo = str;
     },
