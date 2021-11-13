@@ -1,6 +1,6 @@
 export default {
-    // baseUrl: 'http://pin.5laoye.com',
-    baseUrl: 'http://192.168.50.142:9001',
+    baseUrl: 'http://budui.xingmangkeji.cn',
+    // baseUrl: 'http://192.168.50.142:9001',
     // baseUrl: 'http://192.168.1.128:8094',
     // baseUrl:'http://pinapi.hxqhhhh.shop',
     login: '/admin/login', //登录
@@ -26,6 +26,12 @@ export default {
     product_order_list:'/admin/product_order_list',//用户点餐订单列表
     update_order_status:'/admin/update_order_status',//订单确认
     homework_order_list:'/admin/homework_order_list',//用户家政订单列表
+    banner_list:'/admin/banner_list',//轮播图列表
+    upload_banner_pic:'/admin/upload_banner_pic',//上传轮播图
+    save_banner:'/admin/save_banner',//轮播图添加和编辑
+    del_banner:'/admin/del_banner',//轮播图删除
+    get_article:'/admin/get_article',//获取公告
+    save_article:'/admin/save_article',//更改公告
     // 
     productList:'/admin/product/list',//商品列表
     loginInfo:'/admin/login/info',
@@ -78,7 +84,6 @@ export default {
     user_extract:'/admin/user_extract',//用户提现列表
     upload_pic:'/admin/upload_pic',//上传轮播图和开屏页图片
     banner_add:'/admin/banner_add',//轮播图设置
-    banner_list:'/admin/banner_list',//轮播图列表
     banner_edit:'/admin/banner_edit',//轮播图编辑
     banner_del:'/admin/banner_del',//轮播图删除
     open_pic_add:'/admin/open_pic_add',//开屏页设置

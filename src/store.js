@@ -11,6 +11,8 @@ export default new Vuex.Store({
     jiazhengliebiaoPageSize: 10,
     toupiaoliebiaoPage: 1, //投票列表
     toupiaoliebiaoPageSize: 10,
+    seeShopPage: 1, //查看列表
+    seeShopPageSize: 10,
     // 
     userInfo: null,
     headerTit: '',
@@ -54,6 +56,12 @@ export default new Vuex.Store({
     pingtuanjiluPageSize: 10,
   },
   mutations: {
+    seeShopPage(state, str) {
+      state.seeShopPage = str;
+    },
+    seeShopPageSize(state, str) {
+      state.seeShopPageSize = str;
+    },
     toupiaoliebiaoPage(state, str) {
       state.toupiaoliebiaoPage = str;
     },

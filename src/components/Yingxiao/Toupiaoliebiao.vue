@@ -192,6 +192,7 @@
           </el-form-item>
         </el-form>
       </div>-->
+      <el-button size="small" @click="tianjiafenleiDialogVisible = true" type="primary">添加到分类</el-button>
       <div class="myTable">
         <vxe-table
           :data="tableData2"
@@ -222,7 +223,7 @@
           class="fenye"
           @size-change="this.handleSizeChange2"
           @current-change="this.handleCurrentChange2"
-          :current-page="this.pintuanShangpingliebiaoShopPageSize"
+          :current-page="this.pintuanShangpingliebiaoShopPage"
           :page-size="10"
           :page-sizes="[10, 15, 20, 30]"
           layout="total,sizes, prev, pager, next, jumper"
@@ -257,6 +258,7 @@
           <vxe-table-column field="product.product_price" title="商品售价"></vxe-table-column>
           <vxe-table-column field="product.product_sell_num" title="销量"></vxe-table-column>
           <vxe-table-column field="product.stock" title="库存"></vxe-table-column>
+          <vxe-table-column field="myType" title="分类"></vxe-table-column>
           <vxe-table-column title="操作" width="80">
             <template slot-scope="scope">
               <div class="flex">
@@ -269,13 +271,26 @@
           class="fenye"
           @size-change="this.handleSizeChange3"
           @current-change="this.handleCurrentChange3"
-          :current-page="this.maichanghuodongnoAddSeeShopPage"
+          :current-page="this.seeShopPage"
           :page-size="10"
           :page-sizes="[10, 15, 20, 30]"
           layout="total,sizes, prev, pager, next, jumper"
           :total="this.total3"
         ></el-pagination>
       </div>
+    </el-dialog>
+    <!-- 添加分类 -->
+    <el-dialog
+      title="添加分类"
+      :visible.sync="tianjiafenleiDialogVisible"
+      width="600px"
+      :before-close="tianjiafenleiHandleClose"
+    >
+      <div style="margin-bottom:20px">添加到以下哪种分类？</div>
+      <el-button size="small" @click="addZS" type="primary">添加到主食</el-button>
+      <el-button size="small" @click="addCP" type="primary">添加到菜品</el-button>
+      <el-button size="small" @click="addT" type="primary">添加到汤</el-button>
+      <el-button size="small" @click="addYL" type="primary">添加到饮料</el-button>
     </el-dialog>
   </div>
 </template>
@@ -288,17 +303,19 @@ export default {
       "pintuanShangpingliebiaoShopPage",
       "pintuanShangpingliebiaoShopPageSize",
       "maichanghuodongnoAddSeeShopPage",
-      "maichanghuodongnoAddSeeShopPageSize"
+      "maichanghuodongnoAddSeeShopPageSize",
+      'seeShopPage',
+      'seeShopPageSize'
     ])
   },
   watch: {
     pintuanShangpingliebiaoShopPage: function(page) {
       this.$store.commit("pintuanShangpingliebiaoShopPage", page);
-      this.getData();
+      this.getShopData();
     },
     pintuanShangpingliebiaoShopPageSize: function(pageSize) {
       this.$store.commit("pintuanShangpingliebiaoShopPageSize", pageSize);
-      this.getData();
+      this.getShopData();
     },
     maichanghuodongnoAddSeeShopPage: function(page) {
       this.$store.commit("maichanghuodongnoAddSeeShopPage", page);
@@ -307,10 +324,19 @@ export default {
     maichanghuodongnoAddSeeShopPageSize: function(pageSize) {
       this.$store.commit("maichanghuodongnoAddSeeShopPageSize", pageSize);
       this.getData();
+    },
+    seeShopPage: function(page) {
+      this.$store.commit("seeShopPage", page);
+      this.getSeeData();
+    },
+    seeShopPageSize: function(pageSize) {
+      this.$store.commit("seeShopPageSize", pageSize);
+      this.getSeeData();
     }
   },
   data() {
     return {
+      addArr: [],
       form: {
         rad1: "全部",
         rad2: "",
@@ -347,7 +373,8 @@ export default {
       seeshopDialogVisible: false,
       total3: 0,
       tableData3: [],
-      seeId: ""
+      seeId: "",
+      tianjiafenleiDialogVisible: false
     };
   },
   created() {
@@ -356,8 +383,8 @@ export default {
   methods: {
     async getData() {
       const res = await this.$api.vote_list({
-        limit: this.toupiaoliebiaoPageSize,
-        page: this.toupiaoliebiaoPage
+        limit: this.maichanghuodongnoAddSeeShopPageSize,
+        page: this.maichanghuodongnoAddSeeShopPage
       });
       console.log(res.data.data);
       this.total = res.data.total;
@@ -386,8 +413,8 @@ export default {
     },
     async getShopData() {
       const res = await this.$api.product_list({
-        limit: this.shangpingliebiaoPageSize,
-        page: this.shangpingliebiaoPage
+        limit: this.pintuanShangpingliebiaoShopPageSize,
+        page: this.pintuanShangpingliebiaoShopPage
       });
       console.log(res.data.data);
       this.total2 = res.data.total;
@@ -421,17 +448,23 @@ export default {
       this.getShopData();
       this.addshopDialogVisible = true;
     },
-    async seeShop(row) {
-      console.log(row);
-      this.seeId = row.id;
+    async getSeeData(){
       const res = await this.$api.vote_product_list({
-        vote_id: row.id,
-        limit: this.maichanghuodongSeeShopPageSize,
-        page: this.maichanghuodongSeeShopPage
+        vote_id:this.seeId,
+        limit: this.seeShopPageSize,
+        page: this.seeShopPage
       });
       console.log(res);
       this.total3 = res.data.total;
       this.tableData3 = res.data.data;
+      this.tableData3.forEach(ele => {
+        ele.myType = ele.type == "1" ? "主食" : ele.type == "2" ? '菜品' : ele.type == "3" ? '汤' : '饮料';
+      });
+    },
+    async seeShop(row) {
+      console.log(row);
+      this.seeId = row.id;
+      this.getSeeData();
       this.seeshopDialogVisible = true;
     },
     async tabDelShop(row) {
@@ -453,12 +486,18 @@ export default {
         console.log(res2);
         this.total3 = res2.data.total;
         this.tableData3 = res2.data.data;
+        this.tableData3.forEach(ele => {
+          ele.myType = ele.type == "1" ? "主食" : ele.type == "2" ? '菜品' : ele.type == "3" ? '汤' : '饮料';
+        });
       } else {
         this.$message.error(res.msg);
       }
     },
     addshopHandleClose() {
       this.addshopDialogVisible = false;
+    },
+    tianjiafenleiHandleClose() {
+      this.tianjiafenleiDialogVisible = false;
     },
     async selectAllEvent({ checked, records, row }) {
       console.log(checked ? "勾选事件" : "取消事件", records, row);
@@ -505,47 +544,111 @@ export default {
         }
       }
     },
+    async addZS() {
+      const res = await this.$api.add_vote_product({
+        vote_id: this.addShopId,
+        product_id: this.addArr,
+        type: 1
+      });
+      console.log(res);
+      if (res.code == 200) {
+        this.$message({
+          message: res.msg,
+          type: "success"
+        });
+        this.getData();
+        this.tianjiafenleiDialogVisible = false;
+      } else {
+        this.$message.error(res.msg);
+      }
+    },
+    async addT() {
+      const res = await this.$api.add_vote_product({
+        vote_id: this.addShopId,
+        product_id: this.addArr,
+        type: 3
+      });
+      console.log(res);
+      if (res.code == 200) {
+        this.$message({
+          message: res.msg,
+          type: "success"
+        });
+        this.getData();
+        this.tianjiafenleiDialogVisible = false;
+      } else {
+        this.$message.error(res.msg);
+      }
+    },
+    async addYL() {
+      const res = await this.$api.add_vote_product({
+        vote_id: this.addShopId,
+        product_id: this.addArr,
+        type: 4
+      });
+      console.log(res);
+      if (res.code == 200) {
+        this.$message({
+          message: res.msg,
+          type: "success"
+        });
+        this.getData();
+        this.tianjiafenleiDialogVisible = false;
+      } else {
+        this.$message.error(res.msg);
+      }
+    },
+    async addCP() {
+      const res = await this.$api.add_vote_product({
+        vote_id: this.addShopId,
+        product_id: this.addArr,
+        type: 2
+      });
+      console.log(res);
+      if (res.code == 200) {
+        this.$message({
+          message: res.msg,
+          type: "success"
+        });
+        this.getData();
+        this.tianjiafenleiDialogVisible = false;
+      } else {
+        this.$message.error(res.msg);
+      }
+    },
     async selectAllEvent2({ checked, records, row }) {
       console.log(checked ? "勾选事件" : "取消事件", records, row);
       if (checked) {
-        var arr = [];
+        this.addArr = [];
         records.forEach(ele => {
-          arr.push(ele.id);
+          this.addArr.push(ele.id);
         });
-        const res = await this.$api.add_vote_product({
-          vote_id: this.addShopId,
-          product_id: arr
-        });
-        console.log(res);
-        if (res.code == 200) {
-          this.$message({
-            message: res.msg,
-            type: "success"
-          });
-          this.getData();
-        } else {
-          this.$message.error(res.msg);
-        }
       }
     },
     async selectChangeEvent2({ checked, records, row }) {
       console.log(checked ? "勾选事件" : "取消事件", records, row);
       if (checked) {
-        console.log(row.id);
-        const res = await this.$api.add_vote_product({
-          vote_id: this.addShopId,
-          product_id: row.id
+        this.addArr = [];
+        records.forEach(ele => {
+          this.addArr.push(ele.id);
         });
-        console.log(res);
-        if (res.code == 200) {
-          this.$message({
-            message: res.msg,
-            type: "success"
-          });
-        } else {
-          this.$message.error(res.msg);
-        }
       }
+      // if (checked) {
+      //   console.log(row.id);
+      //   const res = await this.$api.add_vote_product({
+      //     vote_id: this.addShopId,
+      //     product_id: row.id
+      //   });
+      //   console.log(res);
+      //   if (res.code == 200) {
+      //     this.$message({
+      //       message: res.msg,
+      //       type: "success"
+      //     });
+      //   } else {
+      //     this.$message.error(res.msg);
+      //   }
+      // }
     },
     seeshopHandleClose() {
       this.seeshopDialogVisible = false;
@@ -658,16 +761,16 @@ export default {
       this.$store.commit("pintuanShangpingliebiaoShopPageSize", val);
     },
     handleCurrentChange2(val) {
-      console.log(`当前页: ${val}`);
+      console.log(`当前页: ${val}`, 2);
       this.$store.commit("pintuanShangpingliebiaoShopPage", val);
     },
     handleSizeChange3(val) {
       console.log(`每页 ${val} 条`);
-      this.$store.commit("maichanghuodongnoAddSeeShopPageSize", val);
+      this.$store.commit("seeShopPageSize", val);
     },
     handleCurrentChange3(val) {
       console.log(`当前页: ${val}`);
-      this.$store.commit("maichanghuodongnoAddSeeShopPage", val);
+      this.$store.commit("seeShopPage", val);
     }
   }
 };

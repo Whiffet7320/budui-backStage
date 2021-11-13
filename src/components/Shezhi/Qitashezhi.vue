@@ -9,41 +9,20 @@
           :model="ruleForm"
           :rules="rules"
           ref="ruleForm"
-          label-width="210px"
+          label-width="110px"
           class="demo-ruleForm"
         >
-          <el-row>
+          <!-- <el-row>
             <el-col :span="12">
-              <el-form-item label="客服号码：" prop="kefu_num">
-                <el-input size="small" v-model="ruleForm.kefu_num"></el-input>
+              <el-form-item label="设置公告标题：">
+                <el-input size="small" v-model="ruleForm.title"></el-input>
               </el-form-item>
             </el-col>
-          </el-row>
+          </el-row> -->
           <el-row>
             <el-col :span="12">
-              <el-form-item label="客服微信：" prop="kefu_weixin">
-                <el-input size="small" v-model="ruleForm.kefu_weixin"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="提现最低金额：" prop="withdrawal_limit">
-                <el-input size="small" v-model="ruleForm.withdrawal_limit"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="邀请新用户可获得积分：" prop="get_user_integral">
-                <el-input size="small" v-model="ruleForm.get_user_integral"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="拼团板块达到多少次可使用积分：" prop="pintuan_use_integral">
-                <el-input size="small" v-model="ruleForm.pintuan_use_integral"></el-input>
+              <el-form-item label="设置公告内容：">
+                <el-input size="small" v-model="ruleForm.content"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -52,7 +31,7 @@
               icon="el-icon-s-promotion"
               size="small"
               type="primary"
-              @click="submitForm('ruleForm')"
+              @click="submitForm"
             >提交</el-button>
           </el-form-item>
         </el-form>
@@ -65,37 +44,22 @@
 export default {
   data() {
     return {
+      id:'',
       ruleForm: {
-        get_user_integral: "",
-        withdrawal_limit: "",
-        pintuan_use_integral: "",
-        kefu_num: "",
-        kefu_weixin: ""
+        title:'',
+        content:'',
       },
       rules: {
-        get_user_integral: [
+        title: [
           {
             required: true,
-            message: "请输入邀请新用户可获得积分",
+            message: "请输入公告标题",
             trigger: "blur"
           }
         ],
-        withdrawal_limit: [
-          { required: true, message: "请输入提现最低金额", trigger: "blur" }
+        content: [
+          { required: true, message: "请输入公告内容", trigger: "blur" }
         ],
-        pintuan_use_integral: [
-          {
-            required: true,
-            message: "请输入拼团板块达到多少次可使用积分",
-            trigger: "blur"
-          }
-        ],
-        kefu_num: [
-          { required: true, message: "请输入客服号码", trigger: "blur" }
-        ],
-        kefu_weixin: [
-          { required: true, message: "请输入客服微信", trigger: "blur" }
-        ]
       }
     };
   },
@@ -104,47 +68,26 @@ export default {
   },
   methods: {
     async getData() {
-      const res = await this.$api.webconfigIndex();
+      const res = await this.$api.get_article();
       console.log(res);
-      this.ruleForm = {
-        ...res.data
-      };
+      this.ruleForm.content = res.data.content;
+      this.id = res.data.id;
     },
-    submitForm(formName) {
-      this.$refs[formName].validate(async valid => {
-        if (valid) {
-          await this.$api.webconfigSave({
-            tag: "pintuan_use_integral",
-            value: this.ruleForm.pintuan_use_integral
-          });
-          await this.$api.webconfigSave({
-            tag: "kefu_num",
-            value: this.ruleForm.kefu_num
-          });
-          await this.$api.webconfigSave({
-            tag: "kefu_weixin",
-            value: this.ruleForm.kefu_weixin
-          });
-          await this.$api.webconfigSave({
-            tag: "get_user_integral",
-            value: this.ruleForm.get_user_integral
-          });
-          const res3 = await this.$api.webconfigSave({
-            tag: "withdrawal_limit",
-            value: this.ruleForm.withdrawal_limit
-          });
-          console.log(res3);
-          if (res3.code == 200) {
-            this.$message({
-              message: res3.msg,
-              type: "success"
-            });
-          }
-        } else {
-          return false;
-        }
-      });
-      console.log(formName, this.ruleForm);
+    async submitForm() {
+      const res = await this.$api.save_article({
+        content:this.ruleForm.content,
+        id:this.id
+      })
+      console.log(res)
+      if (res.code == 200) {
+        this.$message({
+          message: res.msg,
+          type: "success"
+        });
+        this.getData()
+      }else{
+          this.$message.error(res.msg);
+      }
     }
   }
 };

@@ -7,17 +7,14 @@ axios.defaults.headers['Content-Type'] = "application/json;charset=UTF-8";
 let myPost = axios.create({
     baseURL: urls.baseUrl,
     method: 'post',
-    timeout: 5000,
 })
 let myGet = axios.create({
     baseURL: urls.baseUrl,
     method: 'get',
-    timeout: 5000,
 })
 let myDelete = axios.create({
     baseURL: urls.baseUrl,
     method: 'delete',
-    timeout: 5000,
 })
 
 myDelete.interceptors.request.use(config => {
@@ -62,6 +59,14 @@ myGet.interceptors.request.use(config => {
 myPost.interceptors.response.use(response => {
     // console.log(response)
     if (response.status === 200) {
+        if (response.data.code == 401) {
+            sessionStorage.setItem("isLogin", false);
+            console.log(sessionStorage.getItem("isLogin"));
+            router.push({
+                path: "/"
+            })
+            router.go(0)
+        }
         return response.data
     }
     // if (response.status === 200 && response.data.code == '200') {
@@ -109,6 +114,14 @@ myPost.interceptors.response.use(response => {
 })
 myGet.interceptors.response.use(response => {
     if (response.status === 200) {
+        if (response.data.code == 401) {
+            sessionStorage.setItem("isLogin", false);
+            console.log(sessionStorage.getItem("isLogin"));
+            router.push({
+                path: "/"
+            })
+            router.go(0)
+        }
         return response.data
     }
     // if (response.status === 200 && response.data.code == '200') {
@@ -269,6 +282,19 @@ export default {
     update_homework_status(obj) {
         return myPost({
             url: urls.update_homework_status,
+            data: {
+                ...obj
+            }
+        })
+    },
+    get_article() {
+        return myGet({
+            url: urls.get_article,
+        })
+    },
+    save_article(obj) {
+        return myPost({
+            url: urls.save_article,
             data: {
                 ...obj
             }
@@ -758,6 +784,33 @@ export default {
         return myGet({
             url: urls.banner_list,
             params: {
+                ...obj
+            }
+        })
+    },
+    async upload_banner_pic(image) {
+        var configs = {
+            headers: {
+                "Content-Type": "multipart/form-data;charse=UTF-8",
+                'token': `${sessionStorage.getItem("token")}`,
+            },
+        };
+        const res = await axios
+            .post(`${urls.baseUrl}/admin/upload_banner_pic`, image, configs)
+        return res.data
+    },
+    save_banner(obj) {
+        return myPost({
+            url: urls.save_banner,
+            data: {
+                ...obj
+            }
+        })
+    },
+    del_banner(obj) {
+        return myPost({
+            url: urls.del_banner,
+            data: {
                 ...obj
             }
         })

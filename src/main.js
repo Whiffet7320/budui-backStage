@@ -16,8 +16,8 @@ Vue.use(VXETable)
 
 Vue.prototype.$api = api;
 // Vue.prototype.$url = 'http://192.168.1.128:8094/admin'
-Vue.prototype.$url = 'http://192.168.50.142:9001'
-// Vue.prototype.$url = 'http://192.168.50.142:9083'
+// Vue.prototype.$url = 'http://192.168.50.142:9001'
+Vue.prototype.$url = 'http://budui.xingmangkeji.cn';
 
 Vue.use(ElementUI);
 Vue.use(Viewer)

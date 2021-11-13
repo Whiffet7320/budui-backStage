@@ -54,6 +54,13 @@
                   </el-form-item>
                 </el-col>
               </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="排序：" prop="sort">
+                    <el-input size="small" v-model="ruleForm.sort"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
               <!-- <el-row>
                 <el-col :span="12">
                   <el-form-item size="small" label="商品简介：">
@@ -222,7 +229,7 @@
                               </el-image>
                             </div>
                           </template>
-                        </vxe-table-column> -->
+                        </vxe-table-column>-->
                         <vxe-table-column field="price" width="130" title="售价">
                           <template #default="{ row }">
                             <el-input type="number" v-model="row.price"></el-input>
@@ -237,7 +244,7 @@
                           <template #default="{ row }">
                             <el-input type="number" v-model="row.ot_price"></el-input>
                           </template>
-                        </vxe-table-column> -->
+                        </vxe-table-column>-->
                         <vxe-table-column field="stock" width="130" title="库存">
                           <template #default="{ row }">
                             <el-input type="number" v-model="row.stock"></el-input>
@@ -257,7 +264,7 @@
                           <template #default="{ row }">
                             <el-input type="number" v-model="row.volume"></el-input>
                           </template>
-                        </vxe-table-column> -->
+                        </vxe-table-column>-->
                         <vxe-table-column field="volume" width="100" title="操作">
                           <template #default="{ rowIndex }">
                             <el-button @click="delTabSku(rowIndex)" size="small" type="text">删除</el-button>
@@ -514,7 +521,7 @@ export default {
   // },
   data() {
     return {
-      mymyType:'',
+      mymyType: "",
       content: "",
       ddsz: false,
       yjsz: false,
@@ -527,7 +534,8 @@ export default {
         product_name: "",
         category_id: "",
         product_avatar: "",
-        unit_name: ""
+        unit_name: "",
+        sort:'',
         // product_info: "",
         // image: "",
         // recommend_image: "",
@@ -550,7 +558,8 @@ export default {
         slider_image: [
           { required: true, message: "请上传商品轮播图", trigger: "change" }
         ],
-        postage: [{ required: true, message: "请输入邮费", trigger: "blur" }]
+        postage: [{ required: true, message: "请输入邮费", trigger: "blur" }],
+        sort: [{ required: true, message: "请输入排序", trigger: "blur" }]
       },
       addInp: "",
       // 是否添加规格（渲染按钮还是输入框）
@@ -627,12 +636,12 @@ export default {
           delete this.sku[i].product_id;
         });
         console.log(this.sku);
-        this.changeTable()
+        this.changeTable();
         // this.skuTableData = this.shopObj.attrsValue;
-        this.shopObj.attrsValue.forEach((ele,i) => {
+        this.shopObj.attrsValue.forEach((ele, i) => {
           for (const key in ele) {
-            if(key != 'suk'){
-              this.$set(this.skuTableData[i],key,ele[key])
+            if (key != "suk") {
+              this.$set(this.skuTableData[i], key, ele[key]);
             }
           }
         });
@@ -656,7 +665,7 @@ export default {
     // 生成表格
     changeTable() {
       const that = this;
-      console.log(that.sku)
+      console.log(that.sku);
       var arr = [];
       for (let index = 0; index < that.sku.length; index++) {
         if (that.sku.length == 1) {
@@ -884,11 +893,11 @@ export default {
       });
       console.log(this.ruleForm, this.qtszForm, this.skuTableData, this.sku);
       if (this.shopObj) {
-        console.log('asdasdasdasd')
+        console.log("asdasdasdasd");
         // 编辑
         const res = await this.$api.save_product({
           ...this.ruleForm,
-          category_id:this.shopObj.category_id,
+          category_id: this.shopObj.category_id,
           attrs: this.skuTableData,
           items: this.sku,
           product_id: this.shopObj.id
@@ -917,9 +926,9 @@ export default {
       } else {
         const res = await this.$api.save_product({
           ...this.ruleForm,
-          category_id:this.ruleForm.category_id[0],
+          category_id: this.ruleForm.category_id[0],
           attrs: this.skuTableData,
-          items: this.sku,
+          items: this.sku
           // ...this.ruleForm,
           // cate_id: this.ruleForm.cate_id[1].toString(),
           // ...this.qtszForm,

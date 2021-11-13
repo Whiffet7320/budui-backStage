@@ -24,8 +24,8 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="跳转地址：">
-                <el-input size="small" v-model="ruleForm.other_url"></el-input>
+              <el-form-item label="标题：">
+                <el-input size="small" v-model="ruleForm.title"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -54,16 +54,16 @@ export default {
       imgFile: "",
       ruleForm: {
         img: "",
-        other_url: ""
+        title: ""
       }
     };
   },
   methods: {
     // 提交
     async submitForm() {
-      const res = await this.$api.banner_add({
-        url: this.ruleForm.img,
-        other_url: this.ruleForm.other_url
+      const res = await this.$api.save_banner({
+        path: this.ruleForm.img,
+        title: this.ruleForm.title
       });
       console.log(res);
       if (res.code == 200) {
@@ -98,9 +98,9 @@ export default {
           this.imgFile = new FormData();
           this.imgFile.append("image", file);
           sessionStorage.setItem("img", 123);
-          const res = await that.$api.upload_pic(this.imgFile);
-          console.log(res);
-          this.$set(this.ruleForm, "img", res.data.paht);
+          const res = await that.$api.upload_banner_pic(this.imgFile);
+          console.log(res.data.path);
+          this.$set(this.ruleForm, "img", `${this.$url}/${res.data.path}`);
           that.$refs.fileInputList.value = "";
         } else {
           this.$message.error("图片格式不正确");

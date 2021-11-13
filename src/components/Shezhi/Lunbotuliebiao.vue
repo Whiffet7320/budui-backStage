@@ -31,18 +31,18 @@
       </div>-->
       <div class="myTable">
         <vxe-table :data="tableData">
-          <vxe-table-column field="banner_id" title="ID"></vxe-table-column>
-          <vxe-table-column field="url" title="轮播图">
+          <vxe-table-column field="id" title="ID"></vxe-table-column>
+          <vxe-table-column field="path" title="轮播图">
             <template slot-scope="scope">
-              <el-image :src="scope.row.url" fit="fill" style="width: 40px; height: 40px">
+              <el-image :src="scope.row.path" fit="fill" style="width: 40px; height: 40px">
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline"></i>
                 </div>
               </el-image>
             </template>
           </vxe-table-column>
-          <vxe-table-column field="other_url" title="跳转链接"></vxe-table-column>
-          <vxe-table-column field="add_time" title="添加时间"></vxe-table-column>
+          <vxe-table-column field="title" title="标题"></vxe-table-column>
+          <vxe-table-column field="create_at" title="添加时间"></vxe-table-column>
           <vxe-table-column title="操作状态" width="180">
             <template slot-scope="scope">
               <div class="flex">
@@ -52,7 +52,7 @@
             </template>
           </vxe-table-column>
         </vxe-table>
-        <el-pagination
+        <!-- <el-pagination
           class="fenye"
           @size-change="this.handleSizeChange"
           @current-change="this.handleCurrentChange"
@@ -61,7 +61,7 @@
           :page-sizes="[10, 15, 20, 30]"
           layout="total,sizes, prev, pager, next, jumper"
           :total="this.total"
-        ></el-pagination>
+        ></el-pagination> -->
       </div>
     </div>
     <!-- 编辑轮播图 -->
@@ -88,7 +88,7 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="跳转地址：">
-                  <el-input size="small" v-model="ruleForm.other_url"></el-input>
+                  <el-input size="small" v-model="ruleForm.title"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -140,7 +140,7 @@ export default {
       imgFile: "",
       ruleForm: {
         img: "",
-        other_url: ""
+        title: ""
       },
       id: ""
     };
@@ -154,21 +154,21 @@ export default {
         limit: this.lunbotuliebiaoPageSize,
         page: this.lunbotuliebiaoPage
       });
-      console.log(res.data);
-      this.tableData = res.data.data;
-      this.total = res.data.total;
+      console.log(res);
+      this.tableData = res.data;
+      // this.total = res.data.total;
     },
     // 编辑
     tabEdit(row) {
-      this.id = row.banner_id;
-      this.ruleForm.img = row.url;
-      this.ruleForm.other_url = row.other_url;
+      this.id = row.id;
+      this.ruleForm.img = row.path;
+      this.ruleForm.title = row.title;
       this.dialogVisible = true;
     },
     // 删除
     async tabDel(row) {
-      const res = await this.$api.banner_del({
-        id: row.banner_id
+      const res = await this.$api.del_banner({
+        id: row.id
       });
       if (res.code == 200) {
         this.$message({
@@ -180,10 +180,10 @@ export default {
     },
     // 提交
     async submitForm() {
-      const res = await this.$api.banner_edit({
+      const res = await this.$api.save_banner({
         id: this.id,
-        url: this.ruleForm.img,
-        other_url: this.ruleForm.other_url
+        path: this.ruleForm.img,
+        title: this.ruleForm.title
       });
       console.log(res);
       if (res.code == 200) {
@@ -219,9 +219,9 @@ export default {
           this.imgFile = new FormData();
           this.imgFile.append("image", file);
           sessionStorage.setItem("img", 123);
-          const res = await that.$api.upload_pic(this.imgFile);
+          const res = await that.$api.upload_banner_pic(this.imgFile);
           console.log(res);
-          this.$set(this.ruleForm, "img", res.data.paht);
+          this.$set(this.ruleForm, "img",`${this.$url}/${res.data.path}`);
           console.log(this.ruleForm);
           that.$refs.fileInputList.value = "";
         } else {

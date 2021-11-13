@@ -74,7 +74,7 @@
           <vxe-table-column field="product_price" title="商品售价"></vxe-table-column>
           <vxe-table-column field="product_sell_num" title="销量"></vxe-table-column>
           <vxe-table-column field="stock" title="库存"></vxe-table-column>
-          <!-- <vxe-table-column field="sort" title="排序"></vxe-table-column> -->
+          <vxe-table-column field="sort" title="排序"></vxe-table-column>
           <vxe-table-column field="myStatus" title="状态(是否上架)">
             <template slot-scope="scope">
               <el-switch @change="changeKG(scope.row)" v-model="scope.row.myStatus"></el-switch>
