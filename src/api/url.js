@@ -1,4 +1,5 @@
 export default {
+    // 线上地址：buduiadmin.xingmangkeji.cn 密码123456
     baseUrl: 'http://budui.xingmangkeji.cn',
     // baseUrl: 'http://192.168.50.142:9001',
     // baseUrl: 'http://192.168.1.128:8094',
@@ -32,6 +33,8 @@ export default {
     del_banner:'/admin/del_banner',//轮播图删除
     get_article:'/admin/get_article',//获取公告
     save_article:'/admin/save_article',//更改公告
+    wenquan:'/admin/wenquan',//问卷调查
+    wenquan_count:'/admin/wenquan_count',//
     // 
     productList:'/admin/product/list',//商品列表
     loginInfo:'/admin/login/info',

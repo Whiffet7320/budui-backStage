@@ -22,7 +22,7 @@
         <!-- <el-menu-item :route="{ name: 'Shouye' }" index="1-1">
           <i class="el-icon-s-home"></i>
           <span slot="title">首页</span>
-        </el-menu-item> -->
+        </el-menu-item>-->
         <el-submenu index="2">
           <template slot="title">
             <i class="el-icon-s-goods"></i>
@@ -50,6 +50,8 @@
             <span>营销</span>
           </template>
           <el-menu-item :route="{ name: 'Toupiaoliebiao' }" index="4-1">投票列表</el-menu-item>
+          <el-menu-item :route="{ name: 'Wenquandiaocha' }" index="4-2">问卷调查</el-menu-item>
+          <el-menu-item :route="{ name: 'Toupiaotongji' }" index="4-3">投票统计</el-menu-item>
         </el-submenu>
         <!-- <el-submenu index="4">
           <template slot="title">
@@ -83,7 +85,7 @@
             <span>分销</span>
           </template>
           <el-menu-item :route="{ name: 'Fenxiaoshezhi' }" index="6-1">分销设置</el-menu-item>
-        </el-submenu> -->
+        </el-submenu>-->
         <!-- <el-submenu index="7">
           <template slot="title">
             <i class="el-icon-s-check"></i>
@@ -108,7 +110,7 @@
             <span>文章</span>
           </template>
           <el-menu-item :route="{ name: 'Wenzhangliebiao' }" index="9-1">文章列表</el-menu-item>
-        </el-submenu> -->
+        </el-submenu>-->
         <el-submenu index="8">
           <template slot="title">
             <i class="el-icon-s-tools"></i>
@@ -195,6 +197,20 @@ export default {
           "headerTit",
           `营销 / <span style="color: #515a61;
         font-weight: 700;">投票列表</span>`
+        );
+      } else if (to.path == "/Yingxiao/Wenquandiaocha") {
+        this.menuActiveIndex = "4-2";
+        this.$store.commit(
+          "headerTit",
+          `营销 / <span style="color: #515a61;
+        font-weight: 700;">问卷调查</span>`
+        );
+      } else if (to.path == "/Yingxiao/Toupiaotongji") {
+        this.menuActiveIndex = "4-3";
+        this.$store.commit(
+          "headerTit",
+          `营销 / <span style="color: #515a61;
+        font-weight: 700;">投票统计</span>`
         );
       } else if (to.path == "/Yingxiao/Pingtuanshangping") {
         this.menuActiveIndex = "4-1-1";

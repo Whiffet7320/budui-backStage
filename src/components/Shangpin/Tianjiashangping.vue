@@ -894,10 +894,13 @@ export default {
       console.log(this.ruleForm, this.qtszForm, this.skuTableData, this.sku);
       if (this.shopObj) {
         console.log("asdasdasdasd");
+        if(typeof this.ruleForm.category_id == 'object'){
+          this.ruleForm.category_id = this.ruleForm.category_id[0]
+        }
         // 编辑
         const res = await this.$api.save_product({
           ...this.ruleForm,
-          category_id: this.shopObj.category_id,
+          category_id: this.ruleForm.category_id,
           attrs: this.skuTableData,
           items: this.sku,
           product_id: this.shopObj.id

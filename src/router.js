@@ -99,7 +99,15 @@ const routes = [
         path: 'Pingtuanjilu',
         name: 'Pingtuanjilu',
         component: () => import('./components/Yingxiao/Pingtuanjilu'),
-    }, ]
+    },{
+        path: 'Wenquandiaocha',
+        name: 'Wenquandiaocha',
+        component: () => import('./components/Yingxiao/Wenquandiaocha'),
+    },{
+        path: 'Toupiaotongji',
+        name: 'Toupiaotongji',
+        component: () => import('./components/Yingxiao/Toupiaotongji'),
+    }]
 }, {
     path: '/Yonghu',
     name: 'Yonghu',

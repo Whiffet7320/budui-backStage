@@ -300,9 +300,25 @@ export default {
             }
         })
     },
+    wenquan(obj) {
+        return myGet({
+            url: urls.wenquan,
+            params: {
+                ...obj
+            }
+        })
+    },
     vote_list(obj) {
         return myGet({
             url: urls.vote_list,
+            params: {
+                ...obj
+            }
+        })
+    },
+    wenquan_count(obj) {
+        return myGet({
+            url: urls.wenquan_count,
             params: {
                 ...obj
             }
